@@ -143,6 +143,7 @@ export default function HomePage() {
     }
   }
 
+
   const handleImageUpload = async (croppedImage: string) => {
     setUploadedImage(croppedImage)
     setShowResults(true)
@@ -176,35 +177,35 @@ export default function HomePage() {
     setShowResults(false)
   }
 
-if (showResults && uploadedImage) {
-  return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <Navigation />
-      <main className="flex-1 container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center text-green-600 mb-8">Your Outfit Alternatives!</h2>
+  if (showResults && uploadedImage) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navigation />
+        <main className="flex-1 container mx-auto px-4 py-16">
+          <h2 className="text-3xl font-bold text-center text-green-600 mb-8">Your Outfit Alternatives!</h2>
 
-        {transformedHtml ? (
-          <div
-            className="external-html w-full bg-gray-50 text-black p-6 rounded-xl shadow-lg border border-gray-200 overflow-auto"
-            dangerouslySetInnerHTML={{ __html: transformedHtml }}
-          />
-        ) : (
-          <p className="text-center text-gray-600">Load Analysis...</p>
-        )}
+          {transformedHtml ? (
+            <div
+              className="external-html w-full bg-gray-50 text-black p-6 rounded-xl shadow-lg border border-gray-200 overflow-auto"
+              dangerouslySetInnerHTML={{ __html: transformedHtml }}
+            />
+          ) : (
+            <p className="text-center text-gray-600">Load Analysis...</p>
+          )}
 
-        <div className="mt-12 flex justify-center">
-          <Button
-            onClick={handleTryAgain}
-            className="bg-green-600 text-white hover:bg-green-500 hover:scale-105 px-10 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 font-semibold border-2 border-green-500"
-          >
-            Check other outfits
-          </Button>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  )
-}
+          <div className="mt-12 flex justify-center">
+            <Button
+              onClick={handleTryAgain}
+              className="bg-green-600 text-white hover:bg-green-500 hover:scale-105 px-10 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 font-semibold border-2 border-green-500"
+            >
+              Check other outfits
+            </Button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   return (
     <div className="relative min-h-screen flex flex-col animated-bg overflow-hidden">
@@ -334,22 +335,18 @@ if (showResults && uploadedImage) {
                 transform="rotate(25 185 55)"
               />
             </svg>
-
-
-
           </div>
 
           <p className="text-xl md:text-2xl text-green-100 mb-12 max-w-2xl mx-auto leading-relaxed">
             Discover sustainable outfit alternatives with an AI-powered analysis  
           </p>
 
-           {/* Buttons - enhanced design */}
+          {/* Buttons - enhanced design */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-64">
             <Button
               size="lg"
               className="bg-white text-green-700 hover:bg-gray-50 hover:scale-105 px-10 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 font-semibold border-2 border-white"
               onClick={() => document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth" })}
-
             >
                 <Sparkles className="w-5 h-5" />
                 <span>Get Started</span>
@@ -361,14 +358,36 @@ if (showResults && uploadedImage) {
                 variant="outline"
                 className="border-2 border-white text-white hover:bg-white/15 hover:scale-105 px-10 py-4 text-lg rounded-full bg-transparent font-semibold backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                How we find alternatives?
+                How it works
               </Button>
             </Link>
           </div>
 
+          {/* Hier jetzt deine neue Bedingung mit Upload + Beschreibung */}
           {!uploadedImage ? (
-            <div id="upload-section">
+            <div id="upload-section" className="space-y-8">
+              {/* Upload-Block */}
               <ImageUpload onImageUpload={handleImageUpload} />
+
+              {/* Neuer Beschreibungs-Block */}
+              <div className="bg-white/10 backdrop-blur-sm border-2 border-white rounded-2xl p-6 shadow-lg max-w-lg mx-auto">
+                <h3 className="text-white text-2xl font-semibold mb-4 text-center">
+                  Or describe what you aim for
+                </h3>
+                <textarea
+                  className="w-full p-4 rounded-xl bg-white/80 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
+                  rows={4}
+                  placeholder="Write your style preferences, colors, or type of clothing..."
+                ></textarea>
+                <div className="flex justify-center mt-4">
+                  <Button
+                    size="lg"
+                    className="bg-white text-green-700 hover:bg-gray-50 hover:scale-105 px-10 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 font-semibold border-2 border-white"
+                  >
+                    Send
+                  </Button>
+                </div>
+              </div>
             </div>
           ) : (
             <Button
