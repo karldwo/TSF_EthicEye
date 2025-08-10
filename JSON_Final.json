@@ -1,0 +1,1490 @@
+{
+  "name": "Vielversprechend 8",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -860,
+        860
+      ],
+      "id": "a72df413-1597-4c31-8b70-cda1258a8099",
+      "name": "OpenAI Chat Model",
+      "notesInFlow": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "L7RHPjogplhIHzFF",
+          "name": "OpenAi account"
+        }
+      },
+      "notes": "Durchsuche das Google Sheet. \nDieses ist unterteilt in "
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test-website",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2400,
+        260
+      ],
+      "id": "cb3a2557-3d7e-4b46-9447-4e22d43794a7",
+      "name": "Webhook",
+      "webhookId": "54917697-ce3c-4c14-8689-5e5cca8f3134"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Du bist ein KI-Assistent, der auf semantischen Textvergleich spezialisiert ist. Deine Aufgabe ist es, die Ähnlichkeit von zwei Produkten anhand von einer allgemeinen Beschreibung und der verfügbaren Farben zu bewerten.\n\n**ANLEITUNG:**\n1. Vergleiche die beiden Artikelbeschreibungen semantisch. Achte auf {{ $('Filter').item.json.Beschreibung }} und {{ $('Edit Fields').item.json.sauberer_KI_Output.parseJson().Beschreibung }}.\n2. Bewerte die Ähnlichkeit der Beschreibung auf einer Skala von 0 (keine Ähnlichkeit) bis 100 (nahezu identisch) als \"similarity_score_beschreibung\".\n4. Gib deine Antwort ausschließlich als sauberes JSON-Objekt zurück. Gib keine Erklärungen oder anderen Text aus.\n\n**FINALES JSON-FORMAT:**\n{\n  \"Link\": {{ $('Filter').item.json.Link }};\n  \"similarity_score_beschreibung\": <dein berechneter Beschreibungsvergleichs-Score als Zahl\n}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "id": "caaebeda-4087-46ca-9406-a4e01bacb37e",
+      "name": "Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -760,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Du bist ein KI-Experte für visuelle Produktanalyse. Deine Aufgabe ist es, ein Bild eines Kleidungsstücks oder Accessoires zu analysieren und die erkannten Merkmale so detailliert wie möglich in einem vorgegebenen JSON-Format auszugeben.\n\n**ANWEISUNGEN:**\n1.  Analysiere das bereitgestellte Bild sorgfältig.\n2.  Fülle so viele Felder wie möglich im finalen JSON-Objekt basierend auf den visuellen Informationen aus.\n3.  **Für das Feld `Kategorie` musst du einen der folgenden Begriffe auswählen. Wähle den Begriff, der am besten zum abgebildeten Artikel passt. Erfinde keine neuen Kategorien.**\n    **Erlaubte Kategorien sind:** `Hose, T-Shirt`\n4. **Für das Feld `Geschlecht (m/w/d)` musst du einen der folgenden Begriffe auswählen. Wähle den Begriff, der am besten zum abgebildeten Artikel passt. Erfinde keine neuen Kategorien.**\n    **Erlaubte Kategorien sind:** `männlich, weiblich`\n5.  Sei deskriptiv. Bei \"Beschreibung\", beschreibe, was du siehst (z.B. \"wirkt wie weiche Baumwolle\", \"glänzende Oberfläche\", \"Jeansstoff mit Waschung\").\n6. **Für das Feld `Hex Code` musst du die Farbe des Artikels in einem Hex Code abschätzen. Wähle den Code, der am besten zum abgebildeten Artikel passt. Erfinde keine neuen Kategorien.\n7.  Für Felder, die aus dem Bild absolut nicht ersichtlich sind (z.B. `eigene_ID`, `Link`, `Preis`, `Marke`, wenn kein Logo sichtbar ist, `Material_Zusammensetzung`), verwende den Wert `null`.\n8.  Gib NUR das JSON-Objekt aus. Keinen einleitenden Text, keine Erklärungen.\n\n**--- BEISPIEL ---**\n\n**INPUT IMAGE:**\n[Ein Bild, das eine blaue Jeansjacke mit Sherpa-Futter am Kragen zeigt]\n\n**OUTPUT JSON:**\n```json\n{\n  \"eigene_ID\": null,\n  \"Link\": null,\n  \"Marke\": null,\n  \"Produktname\": \"Jeansjacke mit Sherpa-Kragen\",\n  \"Kategorie\": \"Jacke\",\n  \"Geschlecht (m/w/d)\",\n  \"Beschreibung\": \"Eine klassische Jeansjacke in mittlerer Waschung. Der Kragen ist mit hellem, teddyartigem Sherpa-Futter abgesetzt. Die Jacke hat metallene Knöpfe und zwei Brusttaschen.\",\n  \"Hex Code\": \"#D8B9FF\",\n  \"Material_Zusammensetzung\": null,\n  \"Preis\": null,\n  \"Nachhaltigkeitszertifikate\": null\n  }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2160,
+        260
+      ],
+      "id": "3dd4c88b-8bd8-410f-a08f-8d23465983ed",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2160,
+        480
+      ],
+      "id": "13617f41-f558-41cf-bf22-4012fa9ad166",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "L7RHPjogplhIHzFF",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo",
+          "mode": "list",
+          "cachedResultName": "Copy Scraped",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -1640,
+        260
+      ],
+      "id": "f5bc8693-2310-4c82-8b4d-f3f00d2550b5",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "80fd4cf8-3f52-474f-9085-01a2baf4d36d",
+              "name": "sauberer_KI_Output",
+              "value": "={{$json.output.match(/{[\\s\\S]*}/)[0]}}",
+              "type": "string"
+            },
+            {
+              "id": "d0a30bbf-fb1e-43d5-a2b9-6cfbfc4a372b",
+              "name": "Beschreibung",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1820,
+        260
+      ],
+      "id": "2fb92598-c1de-4465-8cec-77320a76d0fe",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dd9afabc-5f35-49df-a690-f0cd7d7fb75b",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json.Kategorie }}",
+              "rightValue": "={{ $('Edit Fields').item.json.sauberer_KI_Output.parseJson().Kategorie }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "fb72ee18-f83c-451e-94df-c844ea625f6c",
+              "leftValue": "={{ $json['Geschlecht (m/w/d)'] }}",
+              "rightValue": "={{ $('Edit Fields').item.json.sauberer_KI_Output.parseJson()['Geschlecht (m/w/d)'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1460,
+        260
+      ],
+      "id": "d7f09716-d8ff-40c2-a27c-885c6cf168eb",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1020,
+        340
+      ],
+      "id": "1878c763-cd40-4b56-9a67-af6bd96d37a2",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI",
+          "mode": "list",
+          "cachedResultName": "COPY Bewertung",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Link": "={{ $('Filter').item.json.Link}}",
+            "Similarity_score": "={{ $json.Similarity_score }}",
+            "similarity_score_beschreibung": "={{ $json.Similarity_score_beschreibung }}",
+            "similarity_score_farben": "={{ $json.Similarity_score_farben }}"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Similarity_score",
+              "displayName": "Similarity_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "similarity_score_beschreibung",
+              "displayName": "similarity_score_beschreibung",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "similarity_score_farben",
+              "displayName": "similarity_score_farben",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1140,
+        900
+      ],
+      "id": "3c342670-c9ab-44d7-8b29-3fa37835bb9b",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI",
+          "mode": "list",
+          "cachedResultName": "COPY Bewertung",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "318a6483-9691-4bd9-a740-dbdcaa82a3a3",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "Similarity_score",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {
+          "disableDotNotation": false
+        }
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "39d58ff7-d303-457a-bebd-147ce9978969",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        320
+      ],
+      "id": "5e487e42-635a-4424-a1c2-772ddc5ce872",
+      "name": "Aggregate2"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        460,
+        0
+      ],
+      "id": "45f05f6c-0698-48c7-b844-65a21509d437",
+      "name": "Aggregate3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "668fceeb-8b9f-45be-b683-f93ea3c5f275",
+              "name": "Platz_1_Link",
+              "value": "={{ $json.data[0].Link }}",
+              "type": "string"
+            },
+            {
+              "id": "7122821e-5b78-49f7-9782-54deff19f462",
+              "name": "Platz_2_Link",
+              "value": "={{ $json.data[1].Link }}",
+              "type": "string"
+            },
+            {
+              "id": "985d1d07-e2ff-483c-b671-e24c4d2a1c86",
+              "name": "Platz_3_Link",
+              "value": "={{ $json.data[2].Link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        0
+      ],
+      "id": "9a0b2524-8d9b-4163-9c6d-718c46f1f9c4",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo",
+          "mode": "list",
+          "cachedResultName": "Copy Scraped",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1080,
+        0
+      ],
+      "id": "a23dc305-c373-4319-ae32-2b89cbd54248",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b1edcf8f-f805-42d2-9a70-40f5be1b6f17",
+              "leftValue": "={{ $json.Link }}",
+              "rightValue": "={{ $('Edit Fields3').item.json.products[0].link }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        0
+      ],
+      "id": "f516a969-6a07-4462-8a10-fa5ab87fd6fd",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"products\": [\n    {\n      \"link\": \"{{ $json.Platz_1_Link }}\",\n      \"nachhaltigkeitszertifikat\": \"\",\n      \"preis\": \"\"\n    },\n    {\n      \"link\": \"{{ $json.Platz_2_Link }}\",\n      \"nachhaltigkeitszertifikat\": \"\",\n      \"preis\": \"\"\n    },\n    {\n      \"link\": \"{{ $json.Platz_3_Link }}\",\n      \"nachhaltigkeitszertifikat\": \"\",\n      \"preis\": \"\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        860,
+        0
+      ],
+      "id": "d56d1e4e-7223-4858-8512-2f5323c38060",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"products\": [\n    {\n      \"link\": \"{{ $json.Link }}\",\n      \"nachhaltigkeitszertifikat\": \"{{JSON.parse($json.Nachhaltigkeitszertifikate)[0]}}\",\n      \"preis\": \"{{ $json.Preis }}\"\n    },\n    {\n      \"link\": \"\",\n      \"nachhaltigkeitszertifikat\": \"\",\n      \"preis\": \"\"\n    },\n    {\n      \"link\": \"\",\n      \"nachhaltigkeitszertifikat\": \"\",\n      \"preis\": \"\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        260
+      ],
+      "id": "ce8cdac4-74b1-4fc6-a9d0-c8383cf650bb",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9a891f2c-9f72-4b27-b9b2-1da159b01159",
+              "leftValue": "={{ $json.Link }}",
+              "rightValue": "={{ $('Edit Fields3').item.json.products[1].link }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        260
+      ],
+      "id": "b902416a-2cbb-4b4c-8b73-435d2af85317",
+      "name": "Filter2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "68407d8a-a9cc-471a-8a08-4a37bee8d992",
+              "leftValue": "={{ $json.Link }}",
+              "rightValue": "={{ $('Edit Fields3').item.json.products[2].link }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        940,
+        260
+      ],
+      "id": "5d8e9e28-58c9-4237-8f1a-6e479536f7ce",
+      "name": "Filter3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo",
+          "mode": "list",
+          "cachedResultName": "Copy Scraped",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        180,
+        260
+      ],
+      "id": "8857681e-4ffc-4537-998e-adddb997b842",
+      "name": "Get row(s) in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo",
+          "mode": "list",
+          "cachedResultName": "Copy Scraped",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dsOugdknoVuUgvP8OAfaqynKh-Tk0imCrtWVut7yfXo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        780,
+        260
+      ],
+      "id": "4d5e711e-5fba-4efe-bac5-16feef9971af",
+      "name": "Get row(s) in sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"products\": [\n    {\n      \"link\": \"{{ $('Edit Fields4').item.json.products[0].link }}\",\n      \"nachhaltigkeitszertifikat\": \"{{ $('Edit Fields4').item.json.products[0].nachhaltigkeitszertifikat }}\",\n      \"preis\": \"{{ $('Edit Fields4').item.json.products[0].preis }}\"\n    },\n    {\n      \"link\": \"{{ $json.Link }}\",\n      \"nachhaltigkeitszertifikat\": \"{{JSON.parse($json.Nachhaltigkeitszertifikate)[0]}}\",\n      \"preis\": \"{{ $json.Preis }}\"\n    },\n    {\n      \"link\": \"\",\n      \"nachhaltigkeitszertifikat\": \"\",\n      \"preis\": \"\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        260
+      ],
+      "id": "e50dbb56-6e8d-4187-9f20-aa1da18b929b",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"products\": [\n    {\n      \"link\": \"{{ $('Edit Fields4').item.json.products[0].link }}\",\n      \"nachhaltigkeitszertifikat\": \"{{ $('Edit Fields4').item.json.products[0].nachhaltigkeitszertifikat }}\",\n      \"preis\": \"{{ $('Edit Fields4').item.json.products[0].preis }}\"\n    },\n    {\n      \"link\": \"{{ $('Edit Fields5').item.json.products[1].link }}\",\n      \"nachhaltigkeitszertifikat\": \"{{ $('Edit Fields5').item.json.products[1].nachhaltigkeitszertifikat }}\",\n      \"preis\": \"{{ $('Edit Fields5').item.json.products[1].preis }}\"\n    },\n    {\n      \"link\": \"{{ $json.Link }}\",\n      \"nachhaltigkeitszertifikat\": \"{{JSON.parse($json.Nachhaltigkeitszertifikate)[0]}}\",\n      \"preis\": \"{{ $json.Preis }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        260
+      ],
+      "id": "b0f3c2d0-d27e-46bc-b1c0-bdaf76ea60b3",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI",
+          "mode": "list",
+          "cachedResultName": "COPY Bewertung",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HKirH_98N_L4NYC1xvgQz85DThpzDfvNXiYOHc2SYHI/edit#gid=0"
+        },
+        "numberToDelete": 100
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1880,
+        260
+      ],
+      "id": "d382e6c7-9bce-40e1-a681-2af3a30f9258",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A69LtULQgPYxyCRS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Hilfsfunktion: HEX → RGB\n// Stellt sicher, dass Funktionen als Konstanten definiert sind, um im n8n-Kontext zuverlässig zu sein.\nconst hexToRgb = (hex) => {\n  // Stellt sicher, dass der Hex-String existiert und das korrekte Format hat.\n  // Fügt ein optionales '#' am Anfang hinzu, falls es mal fehlt.\n  const result = /^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(hex);\n  return result\n    ? [\n        parseInt(result[1], 16) / 255,\n        parseInt(result[2], 16) / 255,\n        parseInt(result[3], 16) / 255,\n      ]\n    : null; // Gibt null zurück, wenn das Format nicht übereinstimmt\n};\n\n// Hilfsfunktion: sRGB → linear RGB\nconst toLinear = (c) => {\n  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);\n};\n\n// Hilfsfunktion: RGB → XYZ\nconst rgbToXyz = (r, g, b) => {\n  r = toLinear(r);\n  g = toLinear(g);\n  b = toLinear(b);\n  return [\n    r * 0.4124 + g * 0.3576 + b * 0.1805,\n    r * 0.2126 + g * 0.7152 + b * 0.0722,\n    r * 0.0193 + g * 0.1192 + b * 0.9505,\n  ];\n};\n\n// Hilfsfunktion: XYZ → LAB\nconst xyzToLab = (x, y, z) => {\n  const refX = 0.95047; // D65 Referenzweißpunkt\n  const refY = 1.00000;\n  const refZ = 1.08883;\n\n  x /= refX;\n  y /= refY;\n  z /= refZ;\n\n  const f = (t) =>\n    t > 0.008856 ? Math.pow(t, 1 / 3) : (7.787 * t) + 16 / 116;\n\n  return [\n    116 * f(y) - 16,\n    500 * (f(x) - f(y)),\n    200 * (f(y) - f(z)),\n  ];\n};\n\n// Alles zusammen: HEX → LAB\nconst hexToLab = (hex) => {\n  const rgb = hexToRgb(hex);\n  if (!rgb) {\n    // Wenn hexToRgb null zurückgibt, geben Sie hier ebenfalls null zurück oder werfen Sie einen Fehler\n    return null;\n  }\n  const [r, g, b] = rgb;\n  const [x, y, z] = rgbToXyz(r, g, b);\n  return xyzToLab(x, y, z);\n};\n\n// Funktion: CIEDE2000\nconst deltaE2000 = (lab1, lab2) => {\n  const [L1, a1, b1] = lab1;\n  const [L2, a2, b2] = lab2;\n\n  const avgLp = (L1 + L2) / 2;\n  const C1 = Math.sqrt(a1 * a1 + b1 * b1);\n  const C2 = Math.sqrt(a2 * a2 + b2 * b2);\n  const avgC = (C1 + C2) / 2;\n\n  const G = 0.5 * (1 - Math.sqrt(Math.pow(avgC, 7) / (Math.pow(avgC, 7) + Math.pow(25, 7))));\n  const a1p = a1 * (1 + G);\n  const a2p = a2 * (1 + G);\n  const C1p = Math.sqrt(a1p * a1p + b1 * b1);\n  const C2p = Math.sqrt(a2p * a2p + b2 * b2);\n  const avgCp = (C1p + C2p) / 2;\n\n  let h1p = Math.atan2(b1, a1p);\n  let h2p = Math.atan2(b2, a2p);\n\n  // atan2 gibt Werte im Bereich [-PI, PI] zurück. Wir normalisieren auf [0, 2*PI].\n  if (h1p < 0) h1p += 2 * Math.PI;\n  if (h2p < 0) h2p += 2 * Math.PI;\n  \n  let deltahp;\n  if (C1p === 0 || C2p === 0) {\n      deltahp = 0;\n  } else if (Math.abs(h1p - h2p) <= Math.PI) {\n      deltahp = h2p - h1p;\n  } else {\n      deltahp = (h2p <= h1p) ? h2p - h1p + 2 * Math.PI : h2p - h1p - 2 * Math.PI;\n  }\n\n  const deltaLp = L2 - L1;\n  const deltaCp = C2p - C1p;\n  const deltaHp = 2 * Math.sqrt(C1p * C2p) * Math.sin(deltahp / 2);\n\n  const avgHp = (Math.abs(h1p - h2p) > Math.PI && C1p !== 0 && C2p !== 0)\n    ? (h1p + h2p + 2 * Math.PI) / 2\n    : (h1p + h2p) / 2;\n\n  const T =\n    1 -\n    0.17 * Math.cos(avgHp - (30 * Math.PI / 180)) +\n    0.24 * Math.cos(2 * avgHp) +\n    0.32 * Math.cos(3 * avgHp + (6 * Math.PI / 180)) -\n    0.20 * Math.cos(4 * avgHp - (63 * Math.PI / 180));\n\n  const SL = 1 + (0.015 * Math.pow(avgLp - 50, 2)) / Math.sqrt(20 + Math.pow(avgLp - 50, 2));\n  const SC = 1 + 0.045 * avgCp;\n  const SH = 1 + 0.015 * avgCp * T;\n\n  const deltaTheta = (30 * Math.PI / 180) * Math.exp(-Math.pow(((avgHp * 180 / Math.PI) - 275) / 25, 2));\n  const RC = 2 * Math.sqrt(Math.pow(avgCp, 7) / (Math.pow(avgCp, 7) + Math.pow(25, 7)));\n  const RT = -RC * Math.sin(2 * deltaTheta);\n\n  const kL = 1;\n  const kC = 1;\n  const kH = 1;\n\n  return Math.sqrt(\n    Math.pow(deltaLp / (kL * SL), 2) +\n    Math.pow(deltaCp / (kC * SC), 2) +\n    Math.pow(deltaHp / (kH * SH), 2) +\n    RT * (deltaCp / (kC * SC)) * (deltaHp / (kH * SH))\n  );\n};\n\n// === INPUT ===\n// In n8n wird `$input` durch `items` ersetzt, was dem Standard-Input-Array entspricht.\n// Wir nehmen an, dass genau ein Item verarbeitet wird.\nconst item = items[0];\n\nconst hex1_raw = item.json.Hex_db;\nconst hex2_raw = item.json.hex_input;\n\n// Grundlegende Validierung der Eingaben\nif (!hex1_raw || typeof hex1_raw !== 'string') {\n  throw new Error('Hex_db ist ungültig oder fehlt im Input.');\n}\nif (!hex2_raw || typeof hex2_raw !== 'string') {\n  throw new Error('hex_input ist ungültig oder fehlt im Input.');\n}\n\n// Konvertierung zu LAB-Werten\nconst lab1 = hexToLab(hex1_raw);\nconst lab2 = hexToLab(hex2_raw);\n\n// Überprüfung, ob die Konvertierung erfolgreich war\nif (lab1 === null) {\n  throw new Error(`Ungültiger Hex-Code für hex1: '${hex1_raw}'`);\n}\nif (lab2 === null) {\n  throw new Error(`Ungültiger Hex-Code für hex2: '${hex2_raw}'`);\n}\n\n// Berechnung der Farbdifferenz\nconst deltaE = Math.round(deltaE2000(lab1, lab2));\n\n// === Ausgabe ===\n// Das Ergebnis wird dem JSON-Objekt des Items hinzugefügt.\n// n8n erwartet, dass das gesamte `items`-Array zurückgegeben wird.\nitem.json.deltaE = deltaE;\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        560
+      ],
+      "id": "a0f4d821-771b-4baa-990d-cf7410f8b656",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca2207eb-e3f8-416a-9013-eae4261f2cdf",
+              "name": "Hex_db",
+              "value": "={{ $json['Hex Code'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1bdcbb72-9f70-4572-88f9-fe9eb08a2ef6",
+              "name": "hex_input",
+              "value": "={{ $('Edit Fields').item.json.sauberer_KI_Output.parseJson()['Hex Code'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1280,
+        260
+      ],
+      "id": "cdaa8d0e-5a46-4667-a886-57dce0857e94",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cea72a23-3e58-4787-ae06-40532ec65591",
+              "name": "Link",
+              "value": "={{ $json.output.parseJson().Link }}",
+              "type": "string"
+            },
+            {
+              "id": "c17f4579-4cb0-4138-96a2-51c0ca7f19da",
+              "name": "Similarity_score_beschreibung",
+              "value": "={{ $json.output.parseJson().similarity_score_beschreibung}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        840
+      ],
+      "id": "c4437017-def9-41db-867c-d2135c01224a",
+      "name": "CleanOutput",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d40f1fec-d1f9-4419-a9dd-8feb504edac9",
+              "leftValue": "={{ $json.output.parseJson().similarity_score_beschreibung }}",
+              "rightValue": "=0",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "3915d7b0-86eb-43fb-9921-ef28f95cbcca",
+              "leftValue": "{{ $json.output.parseJson().Link }}",
+              "rightValue": "https",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        860
+      ],
+      "id": "b7586eea-c7ae-408b-a0d4-b144be5c5cc5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f451399-9b01-4001-b849-e82bebb8e4de",
+              "name": "deltaE",
+              "value": "={{ $json.deltaE }}",
+              "type": "string"
+            },
+            {
+              "id": "9a792ce1-935c-4a47-acd8-e251cd9628d2",
+              "name": "Link",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        180,
+        560
+      ],
+      "id": "a7d5527b-cc77-4c96-bdf7-768a8acbd951",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        680,
+        580
+      ],
+      "id": "e7123f16-ffbb-4d76-a988-d44d1e0846f7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d1ec52cd-066a-4c32-ada6-6ba25af5bfda",
+              "name": "Link",
+              "value": "={{ $json.Link }}",
+              "type": "string"
+            },
+            {
+              "id": "782cce27-1c00-41c2-b1ee-04e72587d8f5",
+              "name": "Similarity_score_beschreibung",
+              "value": "={{ $json.Similarity_score_beschreibung }}",
+              "type": "string"
+            },
+            {
+              "id": "b975ed34-4a50-41e4-841b-cf67ef1095d3",
+              "name": "Similarity_score_farben",
+              "value": "={{ $json.deltaE }}",
+              "type": "string"
+            },
+            {
+              "id": "7a8f1409-29d3-4440-b5c4-da347e41f7b1",
+              "name": "Similarity_score",
+              "value": "={{ Math.round($json.Similarity_score_beschreibung * 1/$json.deltaE) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        920,
+        700
+      ],
+      "id": "b9d98264-5bea-45a7-bd15-c85c1d18987e",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f9110b65-ab5e-4a5a-9fe8-bd2d8459dd9e",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        700
+      ],
+      "id": "e7b8be99-b56d-4087-b834-de76d23021bd",
+      "name": "Edit Fields9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "90d0c5e5-9df4-49e5-b067-5b9f3d2f81e0",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "```json",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        840
+      ],
+      "id": "90b2fccb-88fd-4ab8-a5b4-c863330ec51d",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "html",
+        "options": {}
+      },
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        260
+      ],
+      "id": "8240e591-732e-485b-8b9d-adcb0fc8322b"
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "options": {}
+      },
+      "name": "Move Binary Data1",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        260
+      ],
+      "id": "bdc2b246-ae42-41ec-9260-bde55537275e"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json[\"data\"]}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": "text/html; charset=UTF-8"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        260
+      ],
+      "id": "63a6e81b-414c-4c64-ac7e-846a16a033d6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Aggregate3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet3": {
+      "main": [
+        [
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet4": {
+      "main": [
+        [
+          {
+            "node": "Filter3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CleanOutput": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "CleanOutput",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields9": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Delete rows or columns from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5b9fccf2-98a0-4e6f-ba2c-29a2e31a377d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f9ba9e426649380f04d1b5e141890751fc5a3cf342578c448b2281b4fca53b82"
+  },
+  "id": "lZDdZJR0GyDFmj39",
+  "tags": []
+}
